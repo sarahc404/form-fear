@@ -485,15 +485,38 @@ button:active { transform: translateY(1px); }
     }
   });
 
+  let resetTries = 0;
+  const denials = [
+    ["Request denied", "Form FF-27b cannot be started over. To start over, please complete Form FF-27c: Application to Start Over. Form FF-27c is currently out of stock."],
+    ["Request denied again", "Your second request has been placed in a queue. You are number 4,817. Estimated waiting time: one business decade. Pressing the button again will not help."]
+  ];
   $("reset").addEventListener("click", () => {
-    $("f").reset();
+    resetTries++;
+    const r = $("result");
+    if (resetTries <= denials.length) {
+      const [head, body] = denials[resetTries - 1];
+      stamp("fail", "Denied", resetTries === 1 ? "Form FF-27c required" : "Please hold");
+      r.className = "result show fail";
+      r.innerHTML = "<h2></h2><p></p>";
+      r.querySelector("h2").textContent = head + ".";
+      r.querySelector("p").textContent = body;
+      setTimeout(() => r.scrollIntoView({ behavior: "smooth", block: "start" }), 700);
+      return;
+    }
+    resetTries = 0;
     attempts = 0; mistakes = 0;
+    document.querySelectorAll("#f input[type=text]").forEach(i => { i.value = ""; });
+    $("colour").selectedIndex = 0;
+    $("tick").checked = false;
+    $("agreeYes").checked = false;
+    $("agreeNo").checked = false;
     $("tAttempts").textContent = "0";
     $("tMistakes").textContent = "0";
     $("tPassed").textContent = "0/10";
-    document.querySelectorAll(".q").forEach(q => q.classList.remove("bad", "good"));
-    const r = $("result"); r.className = "result"; r.innerHTML = "";
-    window.scrollTo({ top: 0 });
+    document.querySelectorAll(".q").forEach(q => { q.classList.remove("bad", "good"); q.querySelector(".verdict").textContent = ""; });
+    stamp("pass", "Granted", "Out of sheer persistence");
+    r.className = "result"; r.innerHTML = "";
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 700);
   });
 })();
 </script>
