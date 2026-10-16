@@ -396,6 +396,19 @@ button:active { transform: translateY(1px); }
       if (!v) return "Blank. Please count them.";
       if (/\d/.test(v)) return "That's a digit. The instruction said in words.";
       if (!words.includes(v)) return "Please write it as a number word, like the ones on a cheque.";
+      const fingerJokes = {
+        zero: "Zero fingers? Then how are you filling in this form? The Department is impressed but suspicious.",
+        one: "One? Are you only counting the ones you like?",
+        two: "Two. Did you count in peace signs?",
+        three: "Three. The Department would like a written statement explaining where the other two went.",
+        four: "Four. Thumbs count. The thumb is very upset with you.",
+        six: "Six? Please submit Form FF-6f: Declaration of Bonus Finger, in triplicate.",
+        seven: "Seven. Please stop counting the same finger twice.",
+        eight: "Eight. That is an octopus quantity. Are you an octopus?",
+        nine: "Nine. Recount slowly. Use your other hand if you have to.",
+        ten: "Ten is both hands. The form said LEFT hand. Read the question again."
+      };
+      if (fingerJokes[v]) return fingerJokes[v];
     },
     colour() {
       const v = $("colour").value;
