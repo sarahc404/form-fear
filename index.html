@@ -395,7 +395,22 @@ button:active { transform: translateY(1px); }
       const v = $("fingers").value.trim().toLowerCase();
       if (!v) return "Blank. Please count them.";
       if (/\d/.test(v)) return "That's a digit. The instruction said in words.";
-      if (!words.includes(v)) return "Please write it as a number word, like the ones on a cheque.";
+      if (!words.includes(v)) {
+        const w = v.replace(/[^a-zà-ÿ\s]/g, "").replace(/\s+/g, " ").trim();
+        if (w === "none" || w === "nil" || w === "nothing") return "None? The Department notes you are filling this in one-handed, and that the left hand is conveniently out of sight. Please produce the left hand and recount.";
+        if (["vyf","isihlanu","ntlanu","hlano","cinco","cinq","fünf","funf","cinque","vijf","fem"].includes(w)) return "Correct, but in the wrong language. This form is only available in English. Translation services are closed.";
+        if (/\bfive\b/.test(w)) return "Close. Just the number, please. This box is not a diary.";
+        if (/^(a few|few|some|several|many|lots|loads|enough|plenty|the usual|normal|a handful|handful|all of them)$/.test(w)) return "The Department does not accept estimates. An exact number is required.";
+        if (/^(fiv|fve|fivw|fife|fiev|fivee|fyve|vife|fiive)$/.test(w)) return "Almost. Spelling counts on official documents.";
+        const snark = [
+          "That is a word, technically. It is just not a number.",
+          "The Department has looked this up. It is not a number.",
+          "Interesting answer. Wrong, but interesting.",
+          "That is not a number. That is a vibe.",
+          "The clerk has read your answer three times and is now having a lie-down."
+        ];
+        return snark[Math.floor(Math.random() * snark.length)];
+      }
       const fingerJokes = {
         zero: "Zero? The Department notes you are filling this in one-handed, and that the left hand is conveniently out of sight. Please produce the left hand and recount.",
         one: "One? Are you only counting the ones you like?",
